@@ -39,14 +39,11 @@
   <div class="container">
     <div class="row">
       <div id="app" class="one-half column" style="margin-top: 10%">
-        <h4>List of cities</h4>
-        <table>
-            <tr v-for="item in search_results">
-                <td>{{ item.city }}</td>
-            </tr>
-        </table>
+        <h4>Nearest City: {{ city }}</h4>
+        <h6>Latitude: {{ lat }}</h6>
+        <h6>Longitude: {{ lng }}</h6>
       </div>
-      <div id="mapid" class="one-half column" style="margin-top: 10%; height:300px">
+      <div id="mapid" onmouseout="updateFromMap()" class="one-half column" style="margin-top: 10%; height:300px">
       </div>
     </div>
   </div>
