@@ -1,0 +1,31 @@
+X Show a map using the Leaflet API
+X Pan and zoom available with mouse click-and-drag and scroll wheel interaction 
+X Have an input box for a user to type a location (lat/long coordinates)
+X Map should update when location is entered
+- Input box text should update with new location (lat/long coordinates) when map is panned
+- Draw markers on the map at the location of each measurement
+- Create a popup with actual measurement data when hovering over a marker
+- Populate a table with most up-to-date air quality measurements (from the Open AQ Platform API)
+- Table should automatically update data based on location shown in map
+- Should account for both center and zoom level
+
+"About the Project" page
+- Short bio about each team member (including a photo)
+- Description of the tools (frameworks, APIs, etc.) you used to create the application
+- Video demo of the application (2 - 4 minutes)
+- Can natively embed or upload to YouTube and embed
+
+4 additional points for each item completed on the list below
+
+Create UI controls to filter data
+- Filter based on particle type
+- Filter based on measurement values for each particle type (e.g. only show co > 1.3, ammonia > 72.9, ...)
+- Allow historical data to be retrieved (select a date/time within the last 90 days)
+- Use Location IQ API
+- Also update search box location to location name when panning the map
+- Style the background color of particle values in the table so they match the Air Quality Index from the EPA
+- Also include a legend for the colors
+- Add option for showing a heatmap visualization overlay on the map when only one particle type selected
+- Color should represent the measurement value
+- Include an easy-to-read legend
+- Allow map (along with the location input box) to go fullscreen

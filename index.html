@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title>Air Quality App</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -40,10 +40,11 @@
     <div class="row">
       <div id="app" class="one-half column" style="margin-top: 10%">
         <h4>Nearest City: {{ city }}</h4>
-        <h6>Latitude: {{ lat }}</h6>
-        <h6>Longitude: {{ lng }}</h6>
+        Latitude: <input id="lat" type="text" v-model="lat" /><br />
+        Longitude: <input id="lng" type="text" v-model="lng" /><br />
+        <button onclick="updateFromForm()">Update</button>
       </div>
-      <div id="mapid" onmouseout="updateFromMap()" class="one-half column" style="margin-top: 10%; height:300px">
+      <div id="mapid" onclick="updateFromMap()" class="one-half column" style="margin-top: 10%; height:300px">
       </div>
     </div>
   </div>

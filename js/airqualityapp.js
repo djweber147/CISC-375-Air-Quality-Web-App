@@ -31,18 +31,27 @@ function updateFromMap()
 {
     app.lat = mymap.getCenter().lat;
     app.lng = mymap.getCenter().lng;
-    
+    findNearestCity();
+}
+
+function updateFromForm() {
+    mymap.panTo([app.lat,app.lng]);
+    findNearestCity();
+}
+
+
+function findNearestCity()
+{
     // Find nearest city
     var request = {
         url: "https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng,
         dataType: "json",
-        success: nearestCity
+        success: function (data) { app.city = data.results[0].city; getAQData(data); }
     };
     $.ajax(request);
 }
 
-function nearestCity(data)
-{
+function getAQData(data) {
     app.city = data.results[0].city;
     var request = {
         url: "https://api.openaq.org/v1/latest?city=" + app.city,
