@@ -36,17 +36,35 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-    <div class="row">
-      <div id="app" class="one-half column" style="margin-top: 10%">
-        <h4>Nearest City: {{ city }}</h4>
-        Latitude: <input id="lat" type="text" v-model="lat" /><br />
-        Longitude: <input id="lng" type="text" v-model="lng" /><br />
-        <button onclick="updateFromForm()">Update</button>
+  <div id="app">
+      <div class="container">
+        <div class="row">
+          <div class="one-half column" style="margin-top: 10%">
+            <h4>Nearest Location: {{ location }}</h4>
+            Latitude: <input id="lat" type="text" v-model="lat" /><br />
+            Longitude: <input id="lng" type="text" v-model="lng" /><br />
+            <button onclick="updateFromForm()">Update</button>
+          </div>
+          <div id="mapid" onclick="updateFromMap()" class="one-half column" style="margin-top: 10%; height:300px">
+          </div>
+        </div>
+        <div class="row">
+            <div class="eight columns offset-by-two" style="margin-top: 5%;">
+                <center>
+                    <h5>Location Measurement</h5>
+                    <table>
+                        <tr>
+                            <th v-for="item in measurements">{{ item.parameter}}</th>
+                        </tr>
+                        <tr>
+                            <td v-for="item in measurements">{{ item.value }} {{ item.unit }}</th>
+                            <td v-if="!measurements"><i>No measurements available for this location</td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </div>
       </div>
-      <div id="mapid" onclick="updateFromMap()" class="one-half column" style="margin-top: 10%; height:300px">
-      </div>
-    </div>
   </div>
 
 <!-- End Document
