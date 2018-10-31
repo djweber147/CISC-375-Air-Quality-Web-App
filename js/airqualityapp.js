@@ -21,12 +21,10 @@ app = new Vue({
             this.findNearestLocation();
         },
         findNearestLocation: function () {
-            var request = {
-                url: "https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng,
-                dataType: "json",
-                success: function (data) { app.location = data.results[0].location; getAQData(data); }
-            };
-            $.ajax(request);
+            $.getJSON("https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng, function(data){
+                app.location = data.results[0].location; 
+                getAQData(data);
+            })
         },
         updateFromForm: function () {
             mymap.panTo([this.lat,this.lng]);
@@ -49,16 +47,8 @@ app.updateFromMap();
 
 function getAQData(data) {
     app.city = data.results.location;
-    var request = {
-        url: "https://api.openaq.org/v1/latest?location=" + app.location,
-        dataType: "json",
-        success: OpenAQData
-    };
-    $.ajax(request);
-}
-
-function OpenAQData(data)
-{    
-    app.measurements = data.results[0].measurements;
-    console.log(app.measurements);
+    $.getJSON("https://api.openaq.org/v1/latest?location=" + app.location, function (response) {
+        app.measurements = response.results[0].measurements;
+        console.log(app.measurements);
+    });
 }
