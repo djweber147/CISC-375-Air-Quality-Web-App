@@ -303,6 +303,17 @@ ol ul {
 li {
   margin-bottom: 1rem; }
 
+#navbar {
+  list-style-type: none;
+  position: fixed;
+  overflow: auto;
+}
+.nav-item {
+  display: block;
+  width: 60px;
+  padding: 8px;
+}
+
 
 /* Code
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
