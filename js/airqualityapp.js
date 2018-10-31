@@ -9,9 +9,11 @@ Vue.component('aq-map', {
 app = new Vue({
     el: "#app",
     data: {
+        city: "",
         location: "",
         lat: "",
         lng: "",
+        markerData: [],
         measurements: null
     },
     methods:{
@@ -24,11 +26,20 @@ app = new Vue({
             $.getJSON("https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng, function(data){
                 app.location = data.results[0].location; 
                 getAQData(data);
-            })
+            });
         },
         updateFromForm: function () {
             mymap.panTo([this.lat,this.lng]);
             this.findNearestLocation();
+        },
+        addMarker: function() {
+            var marker = L.marker([this.lat, this.lng]).addTo(mymap);
+            var popupContent = "Latitude: " + this.lat + "\nLongitude: " + this.lng +'<br/>';
+            this.measurements.forEach(function(item){
+                popupContent = popupContent + item.parameter + ':';
+                popupContent = popupContent + item.value + '<br/>';
+            })
+            marker.bindPopup(popupContent);
         }
     }
 });
@@ -50,5 +61,7 @@ function getAQData(data) {
     $.getJSON("https://api.openaq.org/v1/latest?location=" + app.location, function (response) {
         app.measurements = response.results[0].measurements;
         console.log(app.measurements);
-    });
+    }).then(function(){
+        app.addMarker();
+    })
 }
