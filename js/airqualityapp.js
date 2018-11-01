@@ -36,8 +36,8 @@ app = new Vue({
             var marker = L.marker([this.lat, this.lng]).addTo(mymap);
             var popupContent = "Latitude: " + this.lat + "\nLongitude: " + this.lng +'<br/>';
             this.measurements.forEach(function(item){
-                popupContent = popupContent + item.parameter + ':';
-                popupContent = popupContent + item.value + '<br/>';
+                popupContent = popupContent + item.parameter + ': ';
+                popupContent = popupContent + item.value + ' µg/m³<br/>';
             })
             marker.bindPopup(popupContent);
         }
@@ -54,6 +54,8 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1Ijoid2ViZTAxMTkiLCJhIjoiY2pucGlndjJsMDY1bzN3bGthbHFkeW1yYyJ9.Bi-5WN5V7KN__SJGK-v9TQ'
             }).addTo(mymap);
+mymap.on('mouseup', app.updateFromMap);
+mymap.on('zoomend', app.updateFromMap);
 app.updateFromMap();
 
 function getAQData(data) {
