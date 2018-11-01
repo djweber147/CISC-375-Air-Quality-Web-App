@@ -49,7 +49,7 @@
             <h4>Nearest Location: {{ location }}</h4>
             Latitude: <input id="lat" type="text" v-model="lat" /><br />
             Longitude: <input id="lng" type="text" v-model="lng" /><br />
-            <button onclick="updateFromForm()">Update</button>
+            <button v-on:click="updateFromForm">Update</button>
           </div>
             <aq-map></aq-map>
           </div>
