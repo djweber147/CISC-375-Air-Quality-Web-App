@@ -9,7 +9,6 @@ Vue.component('aq-map', {
 app = new Vue({
     el: "#app",
     data: {
-        city: "",
         cityRequest: "",
         location: "",
         lat: "",
@@ -27,7 +26,7 @@ app = new Vue({
             $.getJSON("https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng, function(data){
                 app.location = data.results[0].location;
                 app.cityRequest = app.location;
-                getAQData(data);
+                getAQData();
             });
         },
         updateFromForm: function () {
@@ -44,18 +43,21 @@ app = new Vue({
             .fail(function() { alert("Requested city not found!"); });
         },
         addMarker: function() {
-            // var marker = L.marker([this.lat, this.lng]).addTo(mymap);
-            // var popupContent = "Latitude: " + this.lat + "\nLongitude: " + this.lng +'<br/>';
-            // this.markerData.push({
-            //     lat: this.lat,
-            //     lng: this.lng,
-            //     measurements: this.measurements
-            // })
+            // var marker;
+            // var popupContent
             // this.measurements.forEach(function(item){
+            //     marker = L.marker([item.coordinates.latitude, item.coordinates.longitude]).addTo(mymap);
+            //     popupContent = "Latitude: " + item.coordinates.latitude + "\nLongitude: " + item.coordinates.longitude +'<br/>';
+            //     // this.markerData.push({
+            //     //     lat: item.coordinates.latitude,
+            //     //     lng: item.coordinates.longitude,
+            //     //     measurements: this.measurements
+            //     // })
             //     popupContent = popupContent + item.parameter + ': ';
             //     popupContent = popupContent + item.value + ' µg/m³<br/>';
+            //     marker.bindPopup(popupContent);
             // });
-            // marker.bindPopup(popupContent);
+            
         }
     }
 });
@@ -74,17 +76,31 @@ mymap.on('mouseup', app.updateFromMap);
 mymap.on('zoomend', app.updateFromMap);
 app.updateFromMap();
 
-function getAQData(data) {
-    app.city = data.results.location;
-    // $.getJSON("https://api.openaq.org/v1/measurements?location=" + app.location, function (response) {
-    //     app.measurements = response.results[0].measurements;
-    //     console.log(response);
-    // }).then(function(){
-    //     app.addMarker();
-    // });
-    $.getJSON("https://api.openaq.org/v1/measurements?coordinates=" + app.lat + "," + app.lng + "&radius=10000",
+function getAQData() {
+    $.getJSON("https://api.openaq.org/v1/latest?coordinates=" + app.lat + "," + app.lng + "&radius=10000",
     function(response){
-        app.measurements = response.results;
+        response.results.forEach(function(location){
+            var entry = {
+                location: location.location,
+                coordinates: location.coordinates,
+                pm25: null,
+                pm10: null,
+                co: null,
+                so2: null,
+                no2: null,
+                o3: null
+            }
+            location.measurements.forEach(function(item){
+                if(item.parameter === "pm25"){entry.pm25 = item.value;}
+                if(item.parameter === "pm10"){entry.pm10 = item.value;}
+                if(item.parameter === "co"){entry.co = item.value;}
+                if(item.parameter === "so2"){entry.so2 = item.value;}
+                if(item.parameter === "no2"){entry.no2 = item.value;}
+                if(item.parameter === "o3"){entry.o3 = item.value;}
+            })
+            app.markerData.push(entry);
+        })
+
         console.log(response.results);
     }).then(function(){
         app.addMarker();
