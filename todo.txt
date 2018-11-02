@@ -3,8 +3,8 @@ X Pan and zoom available with mouse click-and-drag and scroll wheel interaction
 X Have an input box for a user to type a location (lat/long coordinates)
 X Map should update when location is entered
 X Input box text should update with new location (lat/long coordinates) when map is panned
-O Draw markers on the map at the location of each measurement
-O Create a popup with actual measurement data when hovering over a marker
+X Draw markers on the map at the location of each measurement
+X Create a popup with actual measurement data when hovering over a marker
 X Populate a table with most up-to-date air quality measurements
 O Should account for both center and zoom level
 
