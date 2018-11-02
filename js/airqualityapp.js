@@ -33,18 +33,18 @@ app = new Vue({
             this.findNearestLocation();
         },
         addMarker: function() {
-            var marker = L.marker([this.lat, this.lng]).addTo(mymap);
-            var popupContent = "Latitude: " + this.lat + "\nLongitude: " + this.lng +'<br/>';
-            this.markerData.push({
-                lat: this.lat,
-                lng: this.lng,
-                measurements: this.measurements
-            })
-            this.measurements.forEach(function(item){
-                popupContent = popupContent + item.parameter + ': ';
-                popupContent = popupContent + item.value + ' µg/m³<br/>';
-            });
-            marker.bindPopup(popupContent);
+            // var marker = L.marker([this.lat, this.lng]).addTo(mymap);
+            // var popupContent = "Latitude: " + this.lat + "\nLongitude: " + this.lng +'<br/>';
+            // this.markerData.push({
+            //     lat: this.lat,
+            //     lng: this.lng,
+            //     measurements: this.measurements
+            // })
+            // this.measurements.forEach(function(item){
+            //     popupContent = popupContent + item.parameter + ': ';
+            //     popupContent = popupContent + item.value + ' µg/m³<br/>';
+            // });
+            // marker.bindPopup(popupContent);
         }
     }
 });
@@ -65,10 +65,17 @@ app.updateFromMap();
 
 function getAQData(data) {
     app.city = data.results.location;
-    $.getJSON("https://api.openaq.org/v1/latest?location=" + app.location, function (response) {
-        app.measurements = response.results[0].measurements;
-        console.log(app.measurements);
+    // $.getJSON("https://api.openaq.org/v1/measurements?location=" + app.location, function (response) {
+    //     app.measurements = response.results[0].measurements;
+    //     console.log(response);
+    // }).then(function(){
+    //     app.addMarker();
+    // });
+    $.getJSON("https://api.openaq.org/v1/measurements?coordinates=" + app.lat + "," + app.lng + "&radius=10000",
+    function(response){
+        app.measurements = response.results;
+        console.log(response.results);
     }).then(function(){
         app.addMarker();
-    })
+    });
 }

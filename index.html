@@ -60,10 +60,14 @@
                     <h5>Location Measurement</h5>
                     <table>
                         <tr>
-                            <th v-for="item in measurements">{{ item.parameter}}</th>
+                            <th>Location</th>
+                            <th>Particle</th>
+                            <th>Value</th>
                         </tr>
-                        <tr>
-                            <td v-for="item in measurements">{{ item.value }} {{ item.unit }}</th>
+                        <tr v-for="item in measurements">
+                            <td>{{ item.location }}</td>
+                            <td>{{ item.parameter }}</td>
+                            <td>{{ item.value }} {{ item.unit }}</td>
                             <td v-if="!measurements"><i>No measurements available for this location</td>
                         </tr>
                     </table>
