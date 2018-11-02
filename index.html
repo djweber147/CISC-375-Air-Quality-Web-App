@@ -50,6 +50,9 @@
             Latitude: <input id="lat" type="text" v-model="lat" /><br />
             Longitude: <input id="lng" type="text" v-model="lng" /><br />
             <button v-on:click="updateFromForm">Update</button>
+            <hr />
+            <input type="text" v-model="cityRequest" />
+            <button v-on:click="citySearch">Search by City</button>
           </div>
             <aq-map></aq-map>
           </div>

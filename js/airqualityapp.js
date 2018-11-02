@@ -10,6 +10,7 @@ app = new Vue({
     el: "#app",
     data: {
         city: "",
+        cityRequest: "",
         location: "",
         lat: "",
         lng: "",
@@ -24,13 +25,23 @@ app = new Vue({
         },
         findNearestLocation: function () {
             $.getJSON("https://api.openaq.org/v1/locations?nearest=1&coordinates=" + app.lat + "," + app.lng, function(data){
-                app.location = data.results[0].location; 
+                app.location = data.results[0].location;
+                app.cityRequest = app.location;
                 getAQData(data);
             });
         },
         updateFromForm: function () {
             mymap.panTo([this.lat,this.lng]);
             this.findNearestLocation();
+        },
+        citySearch: function () {
+            $.getJSON("https://us1.locationiq.com/v1/search.php?key=2a8033e9254767&city=" + this.cityRequest + "&format=json", function(data){
+                        app.lat = data[0].lat;
+                        app.lng = data[0].lon;
+                        mymap.panTo([app.lat,app.lng]);
+                        app.findNearestLocation();
+            })
+            .fail(function() { alert("Requested city not found!"); });
         },
         addMarker: function() {
             // var marker = L.marker([this.lat, this.lng]).addTo(mymap);
