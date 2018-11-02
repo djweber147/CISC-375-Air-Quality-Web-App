@@ -1,5 +1,6 @@
 var app;
 var mymap;
+var markerLayer;
 
 Vue.component('aq-map', {
     props: {},
@@ -43,20 +44,21 @@ app = new Vue({
             .fail(function() { alert("Requested city not found!"); });
         },
         addMarker: function() {
-            // var marker;
-            // var popupContent
-            // this.measurements.forEach(function(item){
-            //     marker = L.marker([item.coordinates.latitude, item.coordinates.longitude]).addTo(mymap);
-            //     popupContent = "Latitude: " + item.coordinates.latitude + "\nLongitude: " + item.coordinates.longitude +'<br/>';
-            //     // this.markerData.push({
-            //     //     lat: item.coordinates.latitude,
-            //     //     lng: item.coordinates.longitude,
-            //     //     measurements: this.measurements
-            //     // })
-            //     popupContent = popupContent + item.parameter + ': ';
-            //     popupContent = popupContent + item.value + ' µg/m³<br/>';
-            //     marker.bindPopup(popupContent);
-            // });
+            var marker;
+            var popupContent
+            markerLayer.clearLayers();
+            this.markerData.forEach(function(item){
+                marker = L.marker([item.coordinates.latitude, item.coordinates.longitude]);
+                markerLayer.addLayer(marker);
+                popupContent = "Latitude: " + item.coordinates.latitude + "\nLongitude: " + item.coordinates.longitude +'<br/>';
+                if(item.pm25 !== null){popupContent = popupContent + 'pm25' + ': ' + item.pm25 + ' µg/m³<br/>';}
+                if(item.pm10 !== null){popupContent = popupContent + 'pm10' + ': ' + item.pm10 + ' µg/m³<br/>';}
+                if(item.co !== null){popupContent = popupContent + 'co' + ': ' + item.co + ' µg/m³<br/>';}
+                if(item.so2 !== null){popupContent = popupContent + 'so2' + ': ' + item.so2 + ' µg/m³<br/>';}
+                if(item.no2 !== null){popupContent = popupContent + 'no2' + ': ' + item.no2 + ' µg/m³<br/>';}
+                if(item.o3 !== null){popupContent = popupContent + 'o3' + ': ' + item.o3 + ' µg/m³<br/>';}
+                marker.bindPopup(popupContent);
+            });
             
         }
     }
@@ -65,6 +67,7 @@ app = new Vue({
 // Map functions
 
 mymap = L.map('mapid').setView([51.505, -0.09], 13);
+markerLayer = L.layerGroup().addTo(mymap);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid2ViZTAxMTkiLCJhIjoiY2pucGlndjJsMDY1bzN3bGthbHFkeW1yYyJ9.Bi-5WN5V7KN__SJGK-v9TQ', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -79,6 +82,7 @@ app.updateFromMap();
 function getAQData() {
     $.getJSON("https://api.openaq.org/v1/latest?coordinates=" + app.lat + "," + app.lng + "&radius=10000",
     function(response){
+        app.markerData = [];
         response.results.forEach(function(location){
             var entry = {
                 location: location.location,
