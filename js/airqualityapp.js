@@ -59,7 +59,20 @@ app = new Vue({
                 if(item.o3 !== null){popupContent = popupContent + 'o3' + ': ' + item.o3 + ' µg/m³<br/>';}
                 marker.bindPopup(popupContent);
             });
-            
+        },
+        indexColor: function (value){
+            var color;
+            console.log(value);
+            if(value == null){color = "white";}
+            else if(value <= 50){color = "green";}
+            else if(value <= 100){color = "yellow";}
+            else if(value <= 150){color = "orange";}
+            else if(value <= 200){color = "red";}
+            else if(value <= 300){color = "purple";}
+            else if(value <= 500){color = "maroon";}
+            return {
+                'background-color': color
+            }
         }
     }
 });

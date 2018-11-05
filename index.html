@@ -73,15 +73,23 @@
                         </tr>
                         <tr v-for="item in markerData">
                             <td>{{ item.location }}</td>
-                            <td>{{ item.pm25 }}</td>
-                            <td>{{ item.pm10 }}</td>
-                            <td>{{ item.so2 }}</td>
-                            <td>{{ item.co }}</td>
-                            <td>{{ item.no2 }}</td>
-                            <td>{{ item.o3 }}</td>
+                            <td v-bind:style="indexColor(item.pm25)">{{ item.pm25 }}</td>
+                            <td v-bind:style="indexColor(item.pm10)">{{ item.pm10 }}</td>
+                            <td v-bind:style="indexColor(item.so2)">{{ item.so2 }}</td>
+                            <td v-bind:style="indexColor(item.co)">{{ item.co }}</td>
+                            <td v-bind:style="indexColor(item.no2)">{{ item.no2 }}</td>
+                            <td v-bind:style="indexColor(item.o3)">{{ item.o3 }}</td>
                             <td v-if="!markerData"><i>No measurements available for this location</td>
                         </tr>
                     </table>
+                    <ul>
+                        <li class="legend-item"><div style="background-color: green; width: 50px; height: 50px;"></div> 0 - 50</li>
+                        <li class="legend-item"><div style="background-color: yellow; width: 50px; height: 50px;"></div> 51-100</li>
+                        <li class="legend-item"><div style="background-color: orange; width: 50px; height: 50px;"></div> 101-150</li>
+                        <li class="legend-item"><div style="background-color: red; width: 50px; height: 50px;"></div> 151-200</li>
+                        <li class="legend-item"><div style="background-color: purple; width: 50px; height: 50px;"></div> 200-300</li>
+                        <li class="legend-item"><div style="background-color: maroon; width: 50px; height: 50px;"></div> 300-500</li>
+                    </ul>
                 </center>
             </div>
         </div>
