@@ -79,7 +79,7 @@ app = new Vue({
 
 // Map functions
 
-mymap = L.map('mapid').setView([51.505, -0.09], 13);
+mymap = L.map('mapid').setView([51.505, -0.09], 11);
 markerLayer = L.layerGroup().addTo(mymap);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid2ViZTAxMTkiLCJhIjoiY2pucGlndjJsMDY1bzN3bGthbHFkeW1yYyJ9.Bi-5WN5V7KN__SJGK-v9TQ', {
@@ -93,7 +93,18 @@ mymap.on('zoomend', app.updateFromMap);
 app.updateFromMap();
 
 function getAQData() {
-    $.getJSON("https://api.openaq.org/v1/latest?coordinates=" + app.lat + "," + app.lng + "&radius=10000",
+    // Find radius for request - Based on https://gis.stackexchange.com/a/198444
+    // Get the y,x dimensions of the map
+    var y = mymap.getSize().y,
+        x = mymap.getSize().x;
+    // calculate the dimensions of the map in meters using the haversine formula
+    var width = mymap.containerPointToLatLng([0, y]).distanceTo( mymap.containerPointToLatLng([x,y]));
+    var height = mymap.containerPointToLatLng([0, 0]).distanceTo( mymap.containerPointToLatLng([0,y]));
+    // Radius is half of the min dimension
+    var radius = Math.min(width,height)/2;
+    
+    
+    $.getJSON("https://api.openaq.org/v1/latest?coordinates=" + app.lat + "," + app.lng + "&radius=" + radius,
     function(response){
         app.markerData = [];
         response.results.forEach(function(location){
