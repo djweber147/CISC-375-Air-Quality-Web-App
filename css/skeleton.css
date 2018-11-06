@@ -313,10 +313,13 @@ li {
   width: 60px;
   padding: 8px;
 }
+#legend {
+  margin-top: 125px;
+}
 .legend-item {
   display: inline-block;
-  width: 50px; 
-  height: 50px;
+  width: 25px; 
+  height: 25px;
 }
 
 
@@ -396,6 +399,13 @@ hr {
   border-width: 0;
   border-top: 1px solid #E1E1E1; }
 
+.format-legend {
+  display: inline-block;
+  font-size: .85rem;
+  position: relative;
+  bottom: 10px;
+  width: 75px;
+}
 
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
