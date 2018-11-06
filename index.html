@@ -1,109 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <!-- Basic Page Needs
+    <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>Air Quality App</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-  crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-      integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-      crossorigin=""></script>
-  <!-- <script type="application/javascript" src="js/airqualityapp.js"></script> -->
+    <meta charset="utf-8">
+    <title>Air Quality App</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+    <!-- <script type="application/javascript" src="js/airqualityapp.js"></script> -->
 
-  <!-- Mobile Specific Metas
+    <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- FONT
+    <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-  <!-- CSS
+    <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
 
 </head>
+
 <body>
 
-  <!-- Primary Page Layout
+    <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div>
-    <ul id="navbar">
-        <li class="nav-item"><a class="nav-item" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-item" href="about.html">About</a></li>
-    </ul>
-  </div>
-  <div id="app">
-      <div class="container">
-        <div class="row">
-          <div class="one-half column" style="margin-top: 10%">
-            <h4>Nearest Location: {{ location }}</h4>
-            Latitude: <input id="lat" type="text" v-model="lat" /><br />
-            Longitude: <input id="lng" type="text" v-model="lng" /><br />
-            <button v-on:click="updateFromForm">Update</button>
-            <hr />
-            <input type="text" v-model="cityRequest" />
-            <button v-on:click="citySearch">Search by City</button>
-          </div>
-            <aq-map></aq-map>
-          </div>
+    <div>
+        <ul id="navbar">
+            <li class="nav-item"><a class="nav-item" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-item" href="about.html">About</a></li>
+        </ul>
+    </div>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="one-half column" style="margin-top: 10%">
+                    <h4>Nearest Location: {{ location }}</h4>
+                    Latitude: <input id="lat" type="text" v-model="lat" /><br />
+                    Longitude: <input id="lng" type="text" v-model="lng" /><br />
+                    <button v-on:click="updateFromForm">Update</button>
+                    <hr />
+                    <select v-model="mode">
+                        <option value="Latest">Latest</option>
+                        <option value="Date">Date</option>
+                    </select>
+                    <label v-if="mode === 'Date'">Date From: <input type="date" v-model="dateFrom"></label>
+                    <label v-if="mode === 'Date'">Date To: <input type="date" min="dateFrom" v-model="dateTo"></label>
+                    <button v-on:click="updateFromMap">Update</button>
+                    <br />
+                    <input type="text" v-model="cityRequest" />
+                    <button v-on:click="citySearch">Search by City</button>
+                </div>
+                <aq-map></aq-map>
+            </div>
         </div>
         <div class="row">
             <div class="seven columns offset-by-one" style="margin-top: 5%;">
-                    <h5>Location Measurement</h5>
-                    <table>
-                        <tr>
-                            <th>Location</th>
-                            <th>pm25</th>
-                            <th>pm10</th>
-                            <th>so2</th>
-                            <th>co</th>
-                            <th>no2</th>
-                            <th>o3</th>
-                        </tr>
-                        <tr v-for="item in markerData">
-                            <td>{{ item.location }}</td>
-                            <td v-if="item.pm25 !== null" v-bind:style="indexColor(item.pm25.value)">{{ item.pm25.value }} {{ item.pm25.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="item.pm10 !== null" v-bind:style="indexColor(item.pm10.value)">{{ item.pm10.value }} {{ item.pm10.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="item.so2 !== null" v-bind:style="indexColor(item.so2.value)">{{ item.so2.value }} {{ item.so2.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="item.co !== null" v-bind:style="indexColor(item.co.value)">{{ item.co.value }} {{ item.co.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="item.no2 !== null" v-bind:style="indexColor(item.no2.value)">{{ item.no2.value }} {{ item.no2.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="item.o3 !== null" v-bind:style="indexColor(item.o3.value)">{{ item.o3.value }} {{ item.o3.unit }}</td>
-                            <td v-else>None</td>
-                            <td v-if="!markerData"><i>No measurements available for this location</td>
-                        </tr>
-                    </table>
+                <h5>Location Measurement</h5>
+                <table>
+                    <tr>
+                        <th>Location</th>
+                        <th>pm25</th>
+                        <th>pm10</th>
+                        <th>so2</th>
+                        <th>co</th>
+                        <th>no2</th>
+                        <th>o3</th>
+                    </tr>
+                    <tr v-for="item in markerData">
+                        <td>{{ item.location }}</td>
+                        <td v-if="item.pm25 !== null" v-bind:style="indexColor(item.pm25.value)">{{ item.pm25.value }}
+                            {{ item.pm25.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="item.pm10 !== null" v-bind:style="indexColor(item.pm10.value)">{{ item.pm10.value }}
+                            {{ item.pm10.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="item.so2 !== null" v-bind:style="indexColor(item.so2.value)">{{ item.so2.value }} {{
+                            item.so2.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="item.co !== null" v-bind:style="indexColor(item.co.value)">{{ item.co.value }} {{
+                            item.co.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="item.no2 !== null" v-bind:style="indexColor(item.no2.value)">{{ item.no2.value }} {{
+                            item.no2.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="item.o3 !== null" v-bind:style="indexColor(item.o3.value)">{{ item.o3.value }} {{
+                            item.o3.unit }}</td>
+                        <td v-else>None</td>
+                        <td v-if="!markerData"><i>No measurements available for this location</td>
+                    </tr>
+                </table>
             </div>
             <div class="two columns" id="legend">
                 <ul>
-                    <li><div class="legend-item" style="background-color: rgb(0,228,0);"></div><span class="format-legend">Good</span></li>
-                    <li><div class="legend-item" style="background-color: rgb(255,255,0);"></div><span class="format-legend">Moderate</span></li>
-                    <li><div class="legend-item" style="background-color: rgb(255,126,0);"></div><span class="format-legend" style="bottom: 0px;">Unhealthy for Sensitive Groups</span></li>
-                    <li><div class="legend-item" style="background-color: rgb(255,0,0);"></div><span class="format-legend">Unhealthy</span></li>
-                    <li><div class="legend-item" style="background-color: rgb(143,63,151);"></div><span class="format-legend">Very Unhealthy</span></li>
-                    <li><div class="legend-item" style="background-color: rgb(126,0,35);"></div><span class="format-legend">Hazardous</span></li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(0,228,0);"></div><span class="format-legend">Good</span>
+                    </li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(255,255,0);"></div><span class="format-legend">Moderate</span>
+                    </li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(255,126,0);"></div><span class="format-legend"
+                            style="bottom: 0px;">Unhealthy for Sensitive Groups</span>
+                    </li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(255,0,0);"></div><span class="format-legend">Unhealthy</span>
+                    </li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(143,63,151);"></div><span class="format-legend">Very
+                            Unhealthy</span>
+                    </li>
+                    <li>
+                        <div class="legend-item" style="background-color: rgb(126,0,35);"></div><span class="format-legend">Hazardous</span>
+                    </li>
                 </ul>
             </div>
         </div>
-      </div>
-  </div>
+    </div>
+    </div>
 
-<!-- End Document
+    <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script type="application/javascript" src="js/airqualityapp.js"></script>
+    <script type="application/javascript" src="js/airqualityapp.js"></script>
 </body>
+
 </html>
