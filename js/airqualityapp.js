@@ -51,26 +51,56 @@ app = new Vue({
                 marker = L.marker([item.coordinates.latitude, item.coordinates.longitude]);
                 markerLayer.addLayer(marker);
                 popupContent = "Latitude: " + item.coordinates.latitude + "\nLongitude: " + item.coordinates.longitude +'<br/>';
-                if(item.pm25 !== null){popupContent = popupContent + 'pm25' + ': ' + item.pm25 + ' µg/m³<br/>';}
-                if(item.pm10 !== null){popupContent = popupContent + 'pm10' + ': ' + item.pm10 + ' µg/m³<br/>';}
-                if(item.co !== null){popupContent = popupContent + 'co' + ': ' + item.co + ' µg/m³<br/>';}
-                if(item.so2 !== null){popupContent = popupContent + 'so2' + ': ' + item.so2 + ' µg/m³<br/>';}
-                if(item.no2 !== null){popupContent = popupContent + 'no2' + ': ' + item.no2 + ' µg/m³<br/>';}
-                if(item.o3 !== null){popupContent = popupContent + 'o3' + ': ' + item.o3 + ' µg/m³<br/>';}
+                if(item.pm25 !== null){popupContent = popupContent + 'pm25' + ': ' + item.pm25.value + ' ' + item.pm25.unit +'<br/>';}
+                if(item.pm10 !== null){popupContent = popupContent + 'pm10' + ': ' + item.pm10.value + ' ' + item.pm10.unit +'<br/>';}
+                if(item.co !== null){popupContent = popupContent + 'co' + ': ' + item.co.value + ' ' + item.co.unit +'<br/>';}
+                if(item.so2 !== null){popupContent = popupContent + 'so2' + ': ' + item.so2.value + ' ' + item.so2.unit +'<br/>';}
+                if(item.no2 !== null){popupContent = popupContent + 'no2' + ': ' + item.no2.value + ' ' + item.no2.unit +'<br/>';}
+                if(item.o3 !== null){popupContent = popupContent + 'o3' + ': ' + item.o3.value + ' ' + item.o3.unit; +'<br/>'}
                 marker.bindPopup(popupContent);
             });
         },
-        indexColor: function (value){
+        indexColor: function (value, unit, parameter){
             var color;
+            //var index = findAQIndex(value, unit, parameter);
             if(value == null){color = "white";}
-            else if(value <= 50){color = "green";}
-            else if(value <= 100){color = "yellow";}
-            else if(value <= 150){color = "orange";}
-            else if(value <= 200){color = "red";}
-            else if(value <= 300){color = "purple";}
-            else if(value <= 500){color = "maroon";}
+            else if(value <= 50){color = "rgb(0,228,0)";}
+            else if(value <= 100){color = "rgb(255,255,0)";}
+            else if(value <= 150){color = "rgb(255,126,0)";}
+            else if(value <= 200){color = "rgb(255,0,0)";}
+            else if(value <= 300){color = "rgb(143,63,151)";}
+            else if(value > 300){color = "rgb(126,0,35)";}
             return {
                 'background-color': color
+            }
+        },
+        //Emailed Prof Marrinan about this. The values come back in different units.
+        //If you look at page 4 in the pdf he linked on the assignment page,
+        //the units should match the table. we may need to handle conversions
+        //between units. Thats what this function will be for.
+        findAQIndex: function (value, unit, parameter)
+        {
+            if(value == null){return null;}
+            if(parameter === "so2")
+            {
+                if(unit == "µg/m³"){value = (value / 2.62);}
+                if(unit == "ppm"){value = value * 1000;}
+                if(value <= 35){return 0;}
+                if(value <= 75){return 1;}
+                if(value <= 185){return 2;}
+                if(value <= 304){return 3;}
+                if(value <= 604){return 4;}
+                if(value > 604){return 5;}
+            }
+            if(parameter === "co")
+            {
+                if(unit == "µg/m³"){value = (value / 1.145) * 1000;}
+                if(value <= 35){return 0;}
+                if(value <= 75){return 1;}
+                if(value <= 185){return 2;}
+                if(value <= 304){return 3;}
+                if(value <= 604){return 4;}
+                if(value > 604){return 5;}
             }
         }
     }
@@ -87,7 +117,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1Ijoid2ViZTAxMTkiLCJhIjoiY2pucGlndjJsMDY1bzN3bGthbHFkeW1yYyJ9.Bi-5WN5V7KN__SJGK-v9TQ'
             }).addTo(mymap);
-mymap.on('mouseup', app.updateFromMap);
+mymap.on('moveend', app.updateFromMap);
 mymap.on('zoomend', app.updateFromMap);
 app.updateFromMap();
 
@@ -118,12 +148,12 @@ function getAQData() {
                 o3: null
             }
             location.measurements.forEach(function(item){
-                if(item.parameter === "pm25"){entry.pm25 = item.value;}
-                if(item.parameter === "pm10"){entry.pm10 = item.value;}
-                if(item.parameter === "co"){entry.co = item.value;}
-                if(item.parameter === "so2"){entry.so2 = item.value;}
-                if(item.parameter === "no2"){entry.no2 = item.value;}
-                if(item.parameter === "o3"){entry.o3 = item.value;}
+                if(item.parameter === "pm25"){entry.pm25 = item;}
+                if(item.parameter === "pm10"){entry.pm10 = item;}
+                if(item.parameter === "co"){entry.co = item;}
+                if(item.parameter === "so2"){entry.so2 = item;}
+                if(item.parameter === "no2"){entry.no2 = item;}
+                if(item.parameter === "o3"){entry.o3 = item;}
             })
             app.markerData.push(entry);
         })

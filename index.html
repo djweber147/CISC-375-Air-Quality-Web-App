@@ -72,24 +72,30 @@
                         </tr>
                         <tr v-for="item in markerData">
                             <td>{{ item.location }}</td>
-                            <td v-bind:style="indexColor(item.pm25)">{{ item.pm25 }}</td>
-                            <td v-bind:style="indexColor(item.pm10)">{{ item.pm10 }}</td>
-                            <td v-bind:style="indexColor(item.so2)">{{ item.so2 }}</td>
-                            <td v-bind:style="indexColor(item.co)">{{ item.co }}</td>
-                            <td v-bind:style="indexColor(item.no2)">{{ item.no2 }}</td>
-                            <td v-bind:style="indexColor(item.o3)">{{ item.o3 }}</td>
+                            <td v-if="item.pm25 !== null" v-bind:style="indexColor(item.pm25.value)">{{ item.pm25.value }} {{ item.pm25.unit }}</td>
+                            <td v-else>None</td>
+                            <td v-if="item.pm10 !== null" v-bind:style="indexColor(item.pm10.value)">{{ item.pm10.value }} {{ item.pm10.unit }}</td>
+                            <td v-else>None</td>
+                            <td v-if="item.so2 !== null" v-bind:style="indexColor(item.so2.value)">{{ item.so2.value }} {{ item.so2.unit }}</td>
+                            <td v-else>None</td>
+                            <td v-if="item.co !== null" v-bind:style="indexColor(item.co.value)">{{ item.co.value }} {{ item.co.unit }}</td>
+                            <td v-else>None</td>
+                            <td v-if="item.no2 !== null" v-bind:style="indexColor(item.no2.value)">{{ item.no2.value }} {{ item.no2.unit }}</td>
+                            <td v-else>None</td>
+                            <td v-if="item.o3 !== null" v-bind:style="indexColor(item.o3.value)">{{ item.o3.value }} {{ item.o3.unit }}</td>
+                            <td v-else>None</td>
                             <td v-if="!markerData"><i>No measurements available for this location</td>
                         </tr>
                     </table>
             </div>
             <div class="two columns" id="legend">
                 <ul>
-                    <li><div class="legend-item" style="background-color: green;"></div><span class="format-legend">Good</span></li>
-                    <li><div class="legend-item" style="background-color: yellow;"></div><span class="format-legend">Moderate</span></li>
-                    <li><div class="legend-item" style="background-color: orange;"></div><span class="format-legend" style="bottom: 0px;">Unhealthy for Sensitive Groups</span></li>
-                    <li><div class="legend-item" style="background-color: red;"></div><span class="format-legend">Unhealthy</span></li>
-                    <li><div class="legend-item" style="background-color: purple;"></div><span class="format-legend">Very Unhealthy</span></li>
-                    <li><div class="legend-item" style="background-color: maroon;"></div><span class="format-legend">Hazardous</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(0,228,0);"></div><span class="format-legend">Good</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(255,255,0);"></div><span class="format-legend">Moderate</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(255,126,0);"></div><span class="format-legend" style="bottom: 0px;">Unhealthy for Sensitive Groups</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(255,0,0);"></div><span class="format-legend">Unhealthy</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(143,63,151);"></div><span class="format-legend">Very Unhealthy</span></li>
+                    <li><div class="legend-item" style="background-color: rgb(126,0,35);"></div><span class="format-legend">Hazardous</span></li>
                 </ul>
             </div>
         </div>
