@@ -62,7 +62,6 @@ app = new Vue({
         },
         indexColor: function (value){
             var color;
-            console.log(value);
             if(value == null){color = "white";}
             else if(value <= 50){color = "green";}
             else if(value <= 100){color = "yellow";}

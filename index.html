@@ -58,8 +58,7 @@
           </div>
         </div>
         <div class="row">
-            <div class="eight columns offset-by-two" style="margin-top: 5%;">
-                <center>
+            <div class="seven columns offset-by-one" style="margin-top: 5%;">
                     <h5>Location Measurement</h5>
                     <table>
                         <tr>
@@ -82,15 +81,16 @@
                             <td v-if="!markerData"><i>No measurements available for this location</td>
                         </tr>
                     </table>
-                    <ul>
-                        <li class="legend-item"><div style="background-color: green; width: 50px; height: 50px;"></div> 0 - 50</li>
-                        <li class="legend-item"><div style="background-color: yellow; width: 50px; height: 50px;"></div> 51-100</li>
-                        <li class="legend-item"><div style="background-color: orange; width: 50px; height: 50px;"></div> 101-150</li>
-                        <li class="legend-item"><div style="background-color: red; width: 50px; height: 50px;"></div> 151-200</li>
-                        <li class="legend-item"><div style="background-color: purple; width: 50px; height: 50px;"></div> 200-300</li>
-                        <li class="legend-item"><div style="background-color: maroon; width: 50px; height: 50px;"></div> 300-500</li>
-                    </ul>
-                </center>
+            </div>
+            <div class="two columns">
+                <ul>
+                    <li><div class="legend-item" style="background-color: green;"></div><span>Good</span></li>
+                    <li><div class="legend-item" style="background-color: yellow;"></div>Moderate</li>
+                    <li><div class="legend-item" style="background-color: orange;"></div>Unhealthy for Sensitive Groups</li>
+                    <li><div class="legend-item" style="background-color: red;"></div>Unheathly</li>
+                    <li><div class="legend-item" style="background-color: purple;"></div>Very Unhealthy</li>
+                    <li><div class="legend-item" style="background-color: maroon;"></div>Hazardous</li>
+                </ul>
             </div>
         </div>
       </div>
