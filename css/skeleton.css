@@ -28,6 +28,9 @@
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+html, body {
+  min-width: 880px;
+}
 .container {
   position: relative;
   width: 100%;
@@ -270,7 +273,7 @@ select:focus {
   outline: 0; }
 label,
 legend {
-  display: block;
+  display: inline-block;
   margin-bottom: .5rem;
   font-weight: 600; }
 fieldset {
