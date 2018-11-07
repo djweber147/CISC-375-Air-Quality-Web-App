@@ -410,6 +410,14 @@ hr {
   width: 75px;
 }
 
+#location-input-fullscreen
+{
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  left: 5px;
+}
+
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 

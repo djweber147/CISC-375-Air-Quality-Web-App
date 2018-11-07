@@ -9,7 +9,7 @@ Vue.component('aq-map', {
             fullscreen: false
         }
     },
-    template: '<div id="mapid" v-bind:class="{ \'one-half column\': !fullscreen}" v-bind:style="[ !fullscreen ? { \'marginTop\': \'10%\', \'height\': \'50vh\'} : {\'position\': \'fixed\',\'width\': \'100%\',\'height\': \'100%\',\'top\': \'0px\',\'left\': \'0px\'}]"><div id="fullscreenButtonDiv"><img v-on:click="if(fullscreen){window.location.replace(\'?lat=\' + app.lat + \'&lng=\'+ app.lng +\'&zoom=\'+ mymap.getZoom());}setTimeout(function(){ mymap.invalidateSize()}, 100);fullscreen=!fullscreen;app.updateFromMap();" title="Toggle Fullscreen" id="fullscreenButton" src="resize.png" alt="toggle fullscreen" /></div></div>'
+    template: '<div id="mapid" v-bind:class="{ \'one-half column\': !fullscreen}" v-bind:style="[ !fullscreen ? { \'marginTop\': \'10%\', \'height\': \'50vh\'} : {\'position\': \'fixed\',\'width\': \'100%\',\'height\': \'100%\',\'top\': \'0px\',\'left\': \'0px\'}]"><div id="fullscreenButtonDiv"><img v-on:click="if(fullscreen){window.location.replace(\'?lat=\' + app.lat + \'&lng=\'+ app.lng +\'&zoom=\'+ mymap.getZoom());}setTimeout(function(){ mymap.invalidateSize()}, 100);fullscreen=!fullscreen;app.updateFromMap();" title="Toggle Fullscreen" id="fullscreenButton" src="resize.png" alt="toggle fullscreen" /><div v-if="fullscreen" id="location-input-fullscreen"><input type="text" v-model="app.cityRequest" @keyup.enter="app.citySearch" /><button v-on:click="app.citySearch">Search by Location</button></div></div></div>'
 
 
 })
@@ -62,7 +62,7 @@ app = new Vue({
             this.markerData.forEach(function (item) {
                 marker = L.marker([item.coordinates.latitude, item.coordinates.longitude]);
                 markerLayer.addLayer(marker);
-                popupContent = "Latitude: " + item.coordinates.latitude + "\nLongitude: " + item.coordinates.longitude + '<br/>';
+                popupContent = "Latitude: " + item.coordinates.latitude + "<br/>Longitude: " + item.coordinates.longitude + '<br/>';
                 if (item.pm25 !== null) {
                     popupContent = popupContent + 'pm25' + ': ' + item.pm25.value + ' ' + item.pm25.unit + '<br/>';
                 }
@@ -82,28 +82,49 @@ app = new Vue({
                     popupContent = popupContent + 'o3' + ': ' + item.o3.value + ' ' + item.o3.unit; + '<br/>'
                 }
                 marker.bindPopup(popupContent);
+                marker.on('mouseover', function(e){
+                    this.openPopup();
+                });
+                marker.on('mouseout', function(e){
+                    this.closePopup();
+                })
             });
         },
         filterParticles: function (){
             var hasParameter = false;
+            var parameters = ["pm25", "pm10", "co", "so2", "no2", "o3"];
+            var index;
             if(this.filters.length == 0)
             {
                 this.addMarker();
                 return;
+            }
+            for(var j = 0; j < this.filters.length; j++)
+            {
+                index = parameters.indexOf(this.filters[j]);
+                parameters.splice(index, 1);
             }
             for(var j = 0; j < this.markerData.length; j++)
             {
                 hasParameter = false
                 for(var i = 0; i < this.filters.length; i++)
                 {
-                    if(markerData[j][filters[i]] !== null)
+                    if(this.markerData[j][this.filters[i]] !== null)
                     {
                         hasParameter = true;
                     }
                 }
                 if(!hasParameter)
                 {
-                    markerData.splice(j,1);
+                    this.markerData.splice(j,1);
+                    j--;
+                }
+            }
+            for(var j = 0; j < this.markerData.length; j++)
+            {
+                for(i = 0; i < parameters.length; i++)
+                {
+                    this.markerData[j][parameters[i]] = null;
                 }
             }
             this.addMarker();
@@ -243,7 +264,8 @@ function getAQData() {
 
     if (app.mode == "Latest") {
         $.getJSON("https://api.openaq.org/v1/latest?coordinates=" 
-        + app.lat + "," + app.lng + "&radius=" + radius,
+        + app.lat + "," + app.lng + "&radius=" + radius
+        + "&limit=200",
             function (response) {
                 app.markerData = [];
                 response.results.forEach(function (location) {
@@ -283,12 +305,20 @@ function getAQData() {
 
                 console.log(response.results);
             }).then(function () {
-            app.addMarker();
+                if(app.filters.length == 0)
+                {
+                    app.addMarker();
+                }
+                else
+                {
+                    app.filterParticles();
+                }   
         });
     } else if (app.mode == "Date") {
         $.getJSON("https://api.openaq.org/v1/measurements?coordinates=" +
             app.lat + "," + app.lng + "&radius=" + radius +
-            "&date_from=" + app.dateFrom + "&date_to=" + app.dateTo,
+            "&date_from=" + app.dateFrom + "&date_to=" + app.dateTo 
+            + "&limit=200",
             function (response) {
                 app.markerData = [];
                 response.results.forEach(function (item) {
@@ -324,7 +354,14 @@ function getAQData() {
                     app.markerData.push(entry);
                 })
             }).then(function () {
-            app.addMarker();
-        });
+                if(app.filters.length == 0)
+                {
+                    app.addMarker();
+                }
+                else
+                {
+                    app.filterParticles();
+                }            
+            });
     }
 }
