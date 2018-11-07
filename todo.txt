@@ -26,4 +26,4 @@ X Style the background color of particle values in the table so they match the A
 - Add option for showing a heatmap visualization overlay on the map when only one particle type selected
   Color should represent the measurement value
   Include an easy-to-read legend
-- Allow map (along with the location input box) to go fullscreen
+X Allow map (along with the location input box) to go fullscreen

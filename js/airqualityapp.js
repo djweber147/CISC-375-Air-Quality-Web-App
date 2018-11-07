@@ -4,7 +4,14 @@ var markerLayer;
 
 Vue.component('aq-map', {
     props: {},
-    template: '<div id="mapid" class="one-half column" style="margin-top: 10%; height:300px"></div>'
+    data: function () {
+        return {
+            fullscreen: false
+        }
+    },
+    template: '<div id="mapid" v-bind:class="{ \'one-half column\': !fullscreen}" v-bind:style="[ !fullscreen ? { \'marginTop\': \'10%\', \'height\': \'50vh\'} : {\'position\': \'fixed\',\'width\': \'100%\',\'height\': \'100%\',\'top\': \'0px\',\'left\': \'0px\'}]"><div id="fullscreenButtonDiv"><img v-on:click="if(fullscreen){window.location.replace(\'?lat=\' + app.lat + \'&lng=\'+ app.lng +\'&zoom=\'+ mymap.getZoom());}setTimeout(function(){ mymap.invalidateSize()}, 100);fullscreen=!fullscreen;app.updateFromMap();" title="Toggle Fullscreen" id="fullscreenButton" src="resize.png" alt="toggle fullscreen" /></div></div>'
+
+
 })
 
 app = new Vue({
@@ -203,8 +210,14 @@ app = new Vue({
 });
 
 // Map functions
+// Get query params
+initLat = new URLSearchParams(window.location.search).get("lat");
+initLng = new URLSearchParams(window.location.search).get("lng");
+initZoom = new URLSearchParams(window.location.search).get("zoom");
+if (!initLat || !initLng) { initLat = 51.505; initLng = -0.09; } // Otherwise set to London
+if (!initZoom) { initZoom = 11 } // Otherwise set to 11
 
-mymap = L.map('mapid').setView([51.505, -0.09], 11);
+mymap = L.map('mapid').setView([initLat, initLng], initZoom);
 markerLayer = L.layerGroup().addTo(mymap);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid2ViZTAxMTkiLCJhIjoiY2pucGlndjJsMDY1bzN3bGthbHFkeW1yYyJ9.Bi-5WN5V7KN__SJGK-v9TQ', {
