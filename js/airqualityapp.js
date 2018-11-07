@@ -128,10 +128,6 @@ app = new Vue({
             var minDate = current - 7776000000;
             return Date(minDate).toISOString();
         },
-        //Emailed Prof Marrinan about this. The values come back in different units.
-        //If you look at page 4 in the pdf he linked on the assignment page,
-        //the units should match the table. we may need to handle conversions
-        //between units. Thats what this function will be for.
         findAQIndex: function (value, unit, parameter) {
             if (value == null) {
                 return null;
